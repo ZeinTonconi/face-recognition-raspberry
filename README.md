@@ -1,7 +1,7 @@
 # Face Recognition — Model Pipeline
 
 ## Project structure
-
+*Python used:* 3.10
 ```
 project/
 │
