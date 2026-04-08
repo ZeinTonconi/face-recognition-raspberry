@@ -153,6 +153,8 @@ def main() -> None:
     print(f"\nModel saved → {MODEL_FILE}")
     print("Run  recognize_live.py  to start live recognition.")
 
+def train():
+    main()
 
 if __name__ == "__main__":
     main()

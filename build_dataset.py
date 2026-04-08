@@ -217,6 +217,8 @@ def main(force: bool = False) -> None:
     print("─────────────────────────────────────────────────")
     print("\nNext step:  python train_model.py")
 
+def build_embeddings():
+    main(force=False)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Build embedding cache from raw images.")

@@ -441,6 +441,54 @@ def main() -> None:
     cap.release()
     cv2.destroyAllWindows()
 
+def start_recognition():
+    main()
+
+def recognize_streamlit():
+    import streamlit as st
+    import cv2
+    import pickle
+    import numpy as np
+
+    from face_utils import detect_faces, crop_face, draw_face_box
+    from recognize_live import _embed_and_predict, MODEL_FILE, UNKNOWN_THRESHOLD
+
+    st.title("Face Recognition")
+
+    cap = cv2.VideoCapture(0)
+    frame_placeholder = st.empty()
+
+    # Load model once
+    with open(MODEL_FILE, "rb") as f:
+        model = pickle.load(f)
+
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        boxes = detect_faces(frame)
+
+        for box in boxes:
+            face = crop_face(frame, box)
+
+            name, conf = _embed_and_predict(
+                face.tobytes(),
+                face.shape,
+                MODEL_FILE,
+                UNKNOWN_THRESHOLD
+            )
+
+            if name is None or conf < UNKNOWN_THRESHOLD:
+                name = "Unknown"
+                conf = None
+
+            draw_face_box(frame, box, name, conf,
+                          known=(name != "Unknown"))
+
+        frame_placeholder.image(frame, channels="BGR")
+
+    cap.release()
 
 # Required on Windows for ProcessPoolExecutor
 if __name__ == "__main__":

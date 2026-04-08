@@ -386,6 +386,15 @@ def main() -> None:
         print("  python build_dataset.py   # recompute embeddings (incremental)")
         print("  python train_model.py     # retrain the classifier")
 
+def augment_data(name=None):
+    if name:
+        person_dir = os.path.join(RAW_DIR, name)
+        return augment_person(person_dir)
+    else:
+        total = 0
+        for d in os.listdir(RAW_DIR):
+            total += augment_person(os.path.join(RAW_DIR, d))
+        return total
 
 if __name__ == "__main__":
     main()

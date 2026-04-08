@@ -97,6 +97,8 @@ def main():
     print("  python build_dataset.py")
     print("  python train_model.py")
 
+def run_bulk():
+    main()
 
 if __name__ == "__main__":
     main()

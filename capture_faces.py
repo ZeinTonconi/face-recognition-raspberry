@@ -99,12 +99,8 @@ def capture_pose(
 # Main
 # ---------------------------------------------------------------------------
 
-def main() -> None:
-    name = input("Enter the person's name (no spaces): ").strip()
-    if not name:
-        print("Name cannot be empty.")
-        sys.exit(1)
-
+def main(name) -> None:
+    
     person_dir = os.path.join(RAW_DIR, name)
     os.makedirs(person_dir, exist_ok=True)
 
@@ -149,6 +145,52 @@ def main() -> None:
     print("  2. Run  build_dataset.py  to compute embeddings.")
     print("  3. Run  train_model.py    to retrain the classifier.")
 
+def capture_person(name: str):
+    if not name:
+        raise ValueError("Name cannot be empty")
+    main(name)
+
+def capture_streamlit(name: str):
+    import streamlit as st
+    import cv2
+    import os
+
+    from face_utils import detect_faces, crop_face, draw_face_box
+
+    person_dir = os.path.join("data", "raw", name)
+    os.makedirs(person_dir, exist_ok=True)
+
+    cap = cv2.VideoCapture(0)
+    frame_placeholder = st.empty()
+
+    captured = 0
+
+    while captured < 5:
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        boxes = detect_faces(frame)
+
+        if boxes:
+            draw_face_box(frame, boxes[0], f"{captured+1}/5")
+
+        frame_placeholder.image(frame, channels="BGR")
+
+        # ⚠️ Streamlit buttons are tricky inside loops
+        if st.button("Capture"):
+            if boxes:
+                face = crop_face(frame, boxes[0])
+                path = os.path.join(person_dir, f"{name}_{captured}.jpg")
+                cv2.imwrite(path, face)
+                captured += 1
+
+    cap.release()
 
 if __name__ == "__main__":
-    main()
+    name = input("Enter the person's name (no spaces): ").strip()
+    if not name:
+        print("Name cannot be empty.")
+        sys.exit(1)
+
+    capture_person(name)
