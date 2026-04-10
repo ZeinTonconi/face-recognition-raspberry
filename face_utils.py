@@ -242,7 +242,8 @@ def pick_camera() -> int:
     if not available:
         raise RuntimeError("No cameras found. Check your hardware.")
     print("Available cameras:", available)
-    raw = input("Camera index to use (default 0): ").strip()
+    raw=0
+    # raw = input("Camera index to use (default 0): ").strip()
     try:
         idx = int(raw)
     except ValueError:

@@ -142,51 +142,51 @@ def grayscale_rgb(img: np.ndarray) -> np.ndarray:
 def build_augmentation_plan() -> list[tuple[str, callable]]:
     plan = [
         # ── Geometry ──────────────────────────────────────────────────────
-        # ("rot_p5",   lambda i: rotate(i,  5)),
-        # ("rot_p10",  lambda i: rotate(i, 10)),
-        # ("rot_p15",  lambda i: rotate(i, 15)),
-        # ("rot_m5",   lambda i: rotate(i,  -5)),
-        # ("rot_m10",  lambda i: rotate(i, -10)),
-        # ("rot_m15",  lambda i: rotate(i, -15)),
-        # ("flip",     flip_h),
-        # ("persp_a",  lambda i: perspective_warp(i, 0.04)),
-        # ("persp_b",  lambda i: perspective_warp(i, 0.07)),
+        ("rot_p5",   lambda i: rotate(i,  5)),
+        ("rot_p10",  lambda i: rotate(i, 10)),
+        ("rot_p15",  lambda i: rotate(i, 15)),
+        ("rot_m5",   lambda i: rotate(i,  -5)),
+        ("rot_m10",  lambda i: rotate(i, -10)),
+        ("rot_m15",  lambda i: rotate(i, -15)),
+        ("flip",     flip_h),
+        ("persp_a",  lambda i: perspective_warp(i, 0.04)),
+        ("persp_b",  lambda i: perspective_warp(i, 0.07)),
 
         # ── Brightness / contrast ─────────────────────────────────────────
-        # ("bright_p30",  lambda i: brightness(i,  30)),
+        ("bright_p30",  lambda i: brightness(i,  30)),
         ("bright_p60",  lambda i: brightness(i,  60)),
-        # ("bright_m30",  lambda i: brightness(i, -30)),
+        ("bright_m30",  lambda i: brightness(i, -30)),
         ("bright_m60",  lambda i: brightness(i, -60)),
         ("contrast_lo", lambda i: contrast(i, 0.7)),
         ("contrast_hi", lambda i: contrast(i, 1.4)),
-        # ("gamma_lo",    lambda i: gamma(i, 0.6)),
+        ("gamma_lo",    lambda i: gamma(i, 0.6)),
         ("gamma_hi",    lambda i: gamma(i, 1.6)),
 
         # ── Colour ────────────────────────────────────────────────────────
-        # ("sat_lo",   lambda i: saturation(i, 0.3)),
-        # ("sat_hi",   lambda i: saturation(i, 1.8)),
-        # ("hue_p15",  lambda i: hue_shift(i,  15)),
-        # ("hue_m15",  lambda i: hue_shift(i, -15)),
-        # ("gray",     grayscale_rgb),
+        ("sat_lo",   lambda i: saturation(i, 0.3)),
+        ("sat_hi",   lambda i: saturation(i, 1.8)),
+        ("hue_p15",  lambda i: hue_shift(i,  15)),
+        ("hue_m15",  lambda i: hue_shift(i, -15)),
+        ("gray",     grayscale_rgb),
 
         # ── Blur / noise / sharpness ──────────────────────────────────────
-        # ("blur3",    lambda i: gaussian_blur(i, 3)),
-        # ("blur5",    lambda i: gaussian_blur(i, 5)),
-        # ("noise_lo", lambda i: gaussian_noise(i, 8)),
-        # ("noise_hi", lambda i: gaussian_noise(i, 18)),
-        # ("sharp",    sharpen),
+        ("blur3",    lambda i: gaussian_blur(i, 3)),
+        ("blur5",    lambda i: gaussian_blur(i, 5)),
+        ("noise_lo", lambda i: gaussian_noise(i, 8)),
+        ("noise_hi", lambda i: gaussian_noise(i, 18)),
+        ("sharp",    sharpen),
 
         # ── Combos (geometry + lighting) ──────────────────────────────────
-        # ("flip_bright",    lambda i: brightness(flip_h(i),  30)),
-        # ("flip_dark",      lambda i: brightness(flip_h(i), -30)),
-        # ("rot10_bright",   lambda i: brightness(rotate(i, 10),  25)),
-        # ("rot_m10_dark",   lambda i: brightness(rotate(i,-10), -25)),
-        # ("persp_noise",    lambda i: gaussian_noise(perspective_warp(i, 0.05), 10)),
-        # ("flip_sat",       lambda i: saturation(flip_h(i), 1.6)),
-        # ("rot10_blur",     lambda i: gaussian_blur(rotate(i, 10), 3)),
-        # ("bright_sharp",   lambda i: sharpen(brightness(i, 20))),
-        # ("gray_blur",      lambda i: gaussian_blur(grayscale_rgb(i), 3)),
-        # ("gamma_lo_noise", lambda i: gaussian_noise(gamma(i, 0.5), 8)),
+        ("flip_bright",    lambda i: brightness(flip_h(i),  30)),
+        ("flip_dark",      lambda i: brightness(flip_h(i), -30)),
+        ("rot10_bright",   lambda i: brightness(rotate(i, 10),  25)),
+        ("rot_m10_dark",   lambda i: brightness(rotate(i,-10), -25)),
+        ("persp_noise",    lambda i: gaussian_noise(perspective_warp(i, 0.05), 10)),
+        ("flip_sat",       lambda i: saturation(flip_h(i), 1.6)),
+        ("rot10_blur",     lambda i: gaussian_blur(rotate(i, 10), 3)),
+        ("bright_sharp",   lambda i: sharpen(brightness(i, 20))),
+        ("gray_blur",      lambda i: gaussian_blur(grayscale_rgb(i), 3)),
+        ("gamma_lo_noise", lambda i: gaussian_noise(gamma(i, 0.5), 8)),
     ]
     return plan
 
@@ -386,15 +386,6 @@ def main() -> None:
         print("  python build_dataset.py   # recompute embeddings (incremental)")
         print("  python train_model.py     # retrain the classifier")
 
-def augment_data(name=None):
-    if name:
-        person_dir = os.path.join(RAW_DIR, name)
-        return augment_person(person_dir)
-    else:
-        total = 0
-        for d in os.listdir(RAW_DIR):
-            total += augment_person(os.path.join(RAW_DIR, d))
-        return total
 
 if __name__ == "__main__":
     main()
