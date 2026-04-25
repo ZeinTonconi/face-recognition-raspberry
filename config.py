@@ -34,7 +34,8 @@ EMBEDDING_MODEL    = "small" # "small" = faster, "large" = more accurate
 # Attendance
 # ---------------------------------------------------------------------------
 CONFIRM_SECONDS  = 3.0    # seconds same person must stay in frame
-COOLDOWN_MINUTES = 2     # minutes before same person can be recorded again
+COOLDOWN_MINUTES = 20
+     # minutes before same person can be recorded again
 
 # ---------------------------------------------------------------------------
 # Camera / display
